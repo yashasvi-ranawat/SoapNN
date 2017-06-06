@@ -20,7 +20,7 @@ cube getY(int l, vec Theta, vec Phi){
     for(int m=-l; m <= l; m++){ 
      for(int t=0; t < Theta.n_elem; t++){ 
        for(int p=0; p < Phi.n_elem; p++){ 
-        Yn(l+m,t,p) = tesseral_spherical_harm(l,m,Theta(t),Phi(p)); 
+        Yn.at(l+m,t,p) = tesseral_spherical_harm(l,m,Theta.at(t),Phi.at(p)); 
         }
       }
     }
@@ -29,11 +29,11 @@ cube getY(int l, vec Theta, vec Phi){
 //----------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------
 cube getT(int n, int l,int m, mat g, cube Yl, vec R, vec Theta, vec Phi){
- cube T =  zeros<cube>(GL.n_rows,GL.n_rows,GL.n_rows); // (r, Theta, Phi)
+ cube T =  zeros<cube>(R.n_elem,Theta.n_elem,Phi.n_elem); // (r, Theta, Phi)
   for(int r=0; r < R.n_elem; r++){ 
     for(int t=0; t < Theta.n_elem; t++){ 
       for(int p=0; p < Phi.n_elem; p++){ 
-        T(r,t,p) = R(r)* R(r)*sin(Theta(t))*Yl(l+m,t,p); 
+        T.at(r,t,p) = R.at(r)* R.at(r)*sin(Theta.at(t))*Yl.at(l+m,t,p);  // R*R*sin(Theta) is the Jacobian for the integration.
       }
     }
   }
@@ -42,11 +42,12 @@ cube getT(int n, int l,int m, mat g, cube Yl, vec R, vec Theta, vec Phi){
 //----------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------
 cube getTMat(int n, int l,int m, mat g, mat Y00, vec R, vec Theta, vec Phi){
- cube T =  zeros<cube>(GL.n_rows,GL.n_rows,GL.n_rows); // (r, Theta, Phi)
-  for(int r=0; r < GL.n_rows; r++){ 
-    for(int t=0; t < GL.n_rows; t++){ 
-      for(int p=0; p < GL.n_rows; p++){ 
-        T(r,t,p) = R(r)* R(r)*sin(Theta(t))*g(n,r)*Y00(t,p); 
+ cube T =  zeros<cube>(R.n_elem,Theta.n_elem,Phi.n_elem); // (r, Theta, Phi)
+
+  for(int r=0; r < R.n_elem; r++){ 
+    for(int t=0; t < Theta.n_elem; t++){ 
+      for(int p=0; p < Phi.n_elem; p++){ 
+        T.at(r,t,p) = R.at(r)* R.at(r)*sin(Theta.at(t))*g.at(n,r)*Y00.at(t,p); 
       }
     }
   }
@@ -54,15 +55,16 @@ cube getTMat(int n, int l,int m, mat g, mat Y00, vec R, vec Theta, vec Phi){
 }
 //----------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------
-double integrate3D(cube rho,cube Tnlm, vec R, vec Theta, vec Phi){
+double integrate3D(cube rho,cube Tnlm, cube GLC, vec R, vec Theta, vec Phi){
 
   double x = 0;
 
-  for(int i=0; i < GL.n_rows; i++){
-    for(int j=0; j < GL.n_rows; j++){
-      for(int k=0; k < GL.n_rows; k++){
+  for(int i=0; i < GLC.n_slices; i++){
+    for(int j=0; j < GLC.n_slices; j++){
+      for(int k=0; k < GLC.n_slices; k++){
      
-        x += GL(i,1)*GL(j,1)*GL(k,1)*rho(i,j,k)*Tnlm(i,j,k);
+        x += GLC.at(i,j,k)*rho.at(i,j,k)*Tnlm.at(i,j,k); // DANGER!!! NOT RESCALED -> MUST BE RESCALED BY 0.5*0.5*0.5*pi*pi*rcut in main.
+                                                             // This is to increase the computation time.
 
       }
     }
