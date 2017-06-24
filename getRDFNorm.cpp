@@ -16,16 +16,15 @@ int main(int argc, char** argv) {
 
 
   double rcut = 100.0;
-  double ao = 2.0;
+  double ao = 1.0;
   double z = 1.0;
   double norm = pow(sqrt(z/ao),3);
   double rsc = 0.5*rcut; // rescaleing the integration for gauss-legendre quaduature.
 
-  double a0 = 0.5;
-  
   mat GL; // [http://keisan.casio.com/exec/system/1329114617 (June 5th 2017)] , produced by Octave. W(:,0) -> GL coord. pos. W(:,1) -> GL weights.
-  GL.load("parameters100.txt");
+//  GL.load("parameters.txt");
 //  GL.load("P500_both.txt");
+  GL.load("parameters50.txt");
 
   vec R = rcut*0.5*GL.col(0) + rcut*0.5 ; // rescaled R for gauss-legendre quaduature
 

@@ -30,15 +30,31 @@ cube getY(int l, vec Theta, vec Phi){
 //----------------------------------------------------------------------------------------------------------------------------------------------
 cube getT(int n, int l,int m, mat g, cube Yl, vec R, vec Theta, vec Phi){
  cube T =  zeros<cube>(R.n_elem,Theta.n_elem,Phi.n_elem); // (r, Theta, Phi)
+ vec RR = R%R;
+ vec sinT = sin(Theta);
   for(int r=0; r < R.n_elem; r++){ 
     for(int t=0; t < Theta.n_elem; t++){ 
       for(int p=0; p < Phi.n_elem; p++){ 
-        T.at(r,t,p) = g.at(n,r)*R.at(r)* R.at(r)*sin(Theta.at(t))*Yl.at(l+m,t,p);  // R*R*sin(Theta) is the Jacobian for the integration.
+        T.at(r,t,p) = g.at(n,r)*RR.at(r)*sinT.at(t)*Yl.at(l+m,t,p);  // R*R*sin(Theta) is the Jacobian for the integration.
       }
     }
   }
   return T;
 }
+//----------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------------
+//cube getT(int n, int l,int m, mat g, cube Yl, vec R, vec Theta, vec Phi){
+// cube T =  zeros<cube>(R.n_elem,Theta.n_elem,Phi.n_elem); // (r, Theta, Phi)
+//  for(int r=0; r < R.n_elem; r++){ 
+//    for(int t=0; t < Theta.n_elem; t++){ 
+//      for(int p=0; p < Phi.n_elem; p++){ 
+//        T.at(r,t,p) = g.at(n,r)*R.at(r)* R.at(r)*sin(Theta.at(t))*Yl.at(l+m,t,p);  // R*R*sin(Theta) is the Jacobian for the integration.
+//      }
+//    }
+//  }
+//
+//  return T;
+//}
 //----------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------
 cube getTMat(int n, int l,int m, mat g, mat Y00, vec R, vec Theta, vec Phi){
@@ -74,9 +90,9 @@ cube getGaussDistr( mat coord,vec R, vec The, vec Phi, cube X, cube Y , cube Z, 
     for(int i=0; i < R.n_rows; i++)
       for(int j=0; j < The.n_rows; j++)
         for(int k=0; k < Phi.n_rows; k++){ 
-          x1 = X(i,j,k);
-          x2 = Y(i,j,k);
-          x3 = Z(i,j,k);
+          x1 = X.at(i,j,k);
+          x2 = Y.at(i,j,k);
+          x3 = Z.at(i,j,k);
 //          G(i,j,k) = G(i,j,k) + exp(-abs((coord(p,0) - x1)) - abs((coord(p,1) - x2)) - abs((coord(p,2) - x3)));
           G.at(i,j,k) = G.at(i,j,k) + exp(-pow(((coord(p,0) - x1)),2) - pow((coord(p,1) - x2),2) - pow((coord(p,2) - x3),2)/1.0);
          }
@@ -85,13 +101,34 @@ cube getGaussDistr( mat coord,vec R, vec The, vec Phi, cube X, cube Y , cube Z, 
 }
 //----------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------
-double integ3D(cube intMe,cube Tnlm){
+double integ3D(cube intMea,cube Tnlm){
 
   // DANGER!!! NOT RESCALED -> MUST BE RESCALED BY 0.5*0.5*0.5*pi*pi*rcut*integ3D() in main.
   // This is to increase the computation time.
-  mat x = sum(intMe%Tnlm);
-  rowvec y = sum(x);
-  double z = sum(y);
+  double z;
+
+  mat x1 = sum(intMea%Tnlm);
+  rowvec y1 = sum(x1);
+
+  z = sum(y1);
+
+return z;
+}
+//----------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------------
+vec integ3Dvec(cube intMea,cube intMeb,cube Tnlm){
+
+  // DANGER!!! NOT RESCALED -> MUST BE RESCALED BY 0.5*0.5*0.5*pi*pi*rcut*integ3D() in main.
+  // This is to increase the computation time.
+  vec z(2);
+
+  mat x1 = sum(intMea%Tnlm);
+  mat x2 = sum(intMeb%Tnlm);
+  rowvec y1 = sum(x1);
+  rowvec y2 = sum(x2);
+
+  z(0) = sum(y1);
+  z(1) = sum(y2);
 
 return z;
 }

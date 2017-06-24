@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
 
   double sig = 1;
 
-  double ao = 2.0;
+  double ao = 1.0;
   double z = 1.0;
   double norm = pow(sqrt(z/ao),3);
   
@@ -54,8 +54,10 @@ int main(int argc, char** argv) {
 //  W.load("WMatData/W3.csv");
 
   mat GL; // [http://keisan.casio.com/exec/system/1329114617 (June 5th 2017)] , produced by Octave. W(:,0) -> GL coord. pos. W(:,1) -> GL weights.
-  GL.load("parameters100.txt");
-//  GL.load("P200_both.txt");
+//  GL.load("parameters100.txt");
+//  GL.load("parameters70.txt");
+//  GL.load("parameters50.txt");
+  GL.load("P200_both.txt");
 
   vec R = rcut*0.5*GL.col(0) + rcut*0.5 ; // rescaled R for gauss-legendre quaduature
   vec The = pi*GL.col(0)*0.5 + pi*0.5;  // rescaled The for gauss-legendre quaduature
@@ -64,17 +66,17 @@ int main(int argc, char** argv) {
   cube X;
   cube Y;
   cube Z;
-  X.load("X.bi");
-  Y.load("Y.bi");
-  Z.load("Z.bi");
+//  X.load("X.bi");
+//  Y.load("Y.bi");
+//  Z.load("Z.bi");
+
 
   X = getSphericalToCartCubeX( R, The, Phi);
   Y = getSphericalToCartCubeY( R, The, Phi);
   Z = getSphericalToCartCubeZ( R, The, Phi);
-//  X.save("X200.bi");
-//  Y.save("Y200.bi");
-//  Z.save("Z200.bi");
-
+  X.save("X200.bi");
+  Y.save("Y200.bi");
+  Z.save("Z200.bi");
 
   mat coord = getPos(argv[1]);
   string* type = getType(argv[1]);
@@ -82,9 +84,10 @@ int main(int argc, char** argv) {
   vec typeA = zeros<vec>(coord.n_rows);
   vec typeB = zeros<vec>(coord.n_rows);
 
-
   coord = posAve(coord); 
+//  coord.print("Before:");
 //  coord = rotate3d(coord,1,1,1);
+//  coord.print("After:");
 //  coord(coord.n_rows - 1,2) += 0.1;
 
   for(int i=0; i < coord.n_rows; i++)  { 
@@ -108,8 +111,11 @@ int main(int argc, char** argv) {
   coord_a.row(coord_a.n_rows - 1) = coord.row(coord.n_rows - 1);
   coord_b.row(coord_b.n_rows - 1) = coord.row(coord.n_rows - 1);
 
+
   cube rho_a = getGaussDistr(coord_a,R, The, Phi, X, Y, Z, sig);
+cout << size(Y) << endl;
   cube rho_b = getGaussDistr(coord_b,R, The, Phi, X, Y, Z, sig);
+
 
 //  coord_a.print("A");
 //  coord_b.print("B");
@@ -124,18 +130,18 @@ int main(int argc, char** argv) {
   vec lastAtom = coord.row(coord.n_rows - 1).t();
 
   cube GLC(GL.n_rows,GL.n_rows,GL.n_rows);
-  GLC.load("GLC.bi");
-//  for(int i=0; i < GL.n_rows; i++){ 
-//    for(int j=0; j < GL.n_rows; j++){ 
-//      for(int k=0; k < GL.n_rows; k++){ 
-//
-//        GLC.at(i,j,k) = GL.at(i,1)*GL.at(j,1)*GL.at(k,1); // Setting up the GL weights.
-//
-//      }
-//    }
-//  }
+//  GLC.load("GLC.bi");
+  for(int i=0; i < GL.n_rows; i++){ 
+    for(int j=0; j < GL.n_rows; j++){ 
+      for(int k=0; k < GL.n_rows; k++){ 
 
-  GLC.save("GLC.bi");
+        GLC.at(i,j,k) = GL.at(i,1)*GL.at(j,1)*GL.at(k,1); // Setting up the GL weights.
+
+      }
+    }
+  }
+
+  GLC.save("GLC200.bi");
 
 //  cout << "Part 1: Done" << endl;
   //----------------------------------------------------------------------------------------------------------------
@@ -706,6 +712,7 @@ Phi.save("Phi.dat",raw_ascii);
   //----------------------------------------------------------------------------------------------------------------
   // Part 5) get Power Spectrum-> Gauss quaduature used in 3D. Int Tnml(r,The,Phi) rho(r,theta,phi) dV
   //----------------------------------------------------------------------------------------------------------------
+
   
   
   
