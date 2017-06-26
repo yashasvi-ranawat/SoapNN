@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
   double pi = 3.14159265358979324;
   double halfPi = 3.14159265358979324*0.5;
 
-  double rcut = 35.0;
+  double rcut = 5.0;
   double rsc = pi*pi*0.5*0.5*rcut; // rescaleing the integration for gauss-legendre quaduature.
 
   double sig = 1;
@@ -54,10 +54,10 @@ int main(int argc, char** argv) {
   cube GLC(GL.n_rows,GL.n_rows,GL.n_rows); // GL weights in 3D which is just an outer product of GL;
   
 
-//  GL.load("parameters100.txt");GLC.load("GLC100.bi");//
+  GL.load("parameters100.txt");GLC.load("GLC100.bi");//
 //  GL.load("parameters50.txt");  GLC.load("GLC50.bi");//
 //  GL.load("parameters70.txt");GLC.load("GLC70.bi"); //
-  GL.load("P200_both.txt"); GLC.load("GLC200.bi"); //
+//  GL.load("P200_both.txt"); GLC.load("GLC200.bi"); //
 
 // Getting R, Theta and Phi rescaled for the Gaull-Legendre quadrature
   vec R = rcut*0.5*GL.col(0) + rcut*0.5 ;
@@ -83,10 +83,10 @@ int main(int argc, char** argv) {
 
 //Finding where atom A and atom B are in .xyz.
   for(int i=0; i < coord.n_rows; i++)  { 
-     if(type[i] == "Mo" ){typeA(i) =1;}
+     if(type[i] == argv[2] ){typeA(i) =1;}
    }
   for(int i=0; i < coord.n_rows; i++)  { 
-     if(type[i] == "S" ){typeB(i) =1;}
+     if(type[i] == argv[3] ){typeB(i) =1;}
    }
 // New coordinates -> type A + Hydrogen and type B + Hydrogen
   mat coord_a = zeros<mat>(sum(typeA) + 1,3);
@@ -94,11 +94,11 @@ int main(int argc, char** argv) {
 
   double newJ = 0;
   for(int i=0; i < coord.n_rows; i++)  { 
-     if(type[i] == "Mo" ){coord_a.row(newJ) = coord.row(i); newJ++;}
+     if(type[i] == argv[2] ){coord_a.row(newJ) = coord.row(i); newJ++;}
    }
   newJ = 0;
   for(int i=0; i < coord.n_rows; i++)  { 
-     if(type[i] == "S" ){coord_b.row(newJ) = coord.row(i); newJ++;}
+     if(type[i] == argv[3] ){coord_b.row(newJ) = coord.row(i); newJ++;}
    }
 
 // Adding Hydrogen at the end
