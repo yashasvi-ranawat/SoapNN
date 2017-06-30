@@ -125,10 +125,10 @@ int main(int argc, char** argv) {
   gn.col(3)= hydrogenRDF(4, z,ao,norm,R); // a0 = 0.5, Norm. Const. = 2^(3/2)
 
 // Printing out gn for debugging.
-  gn.save("gn.dat",raw_ascii);
-  R.save("R.dat",raw_ascii);
-  The.save("The.dat",raw_ascii);
-  Phi.save("Phi.dat",raw_ascii);
+//  gn.save("gn.dat",raw_ascii);
+//  R.save("R.dat",raw_ascii);
+//  The.save("The.dat",raw_ascii);
+//  Phi.save("Phi.dat",raw_ascii);
 // Transpose for gn
   mat    g = gn.t();
 
