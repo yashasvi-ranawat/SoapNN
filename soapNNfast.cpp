@@ -108,10 +108,12 @@ int main(int argc, char** argv) {
 // Gaussian Smearing at Gauss-Lgedendre quadratue points
   cube rho_a = getGaussDistr(coord_a,R, The, Phi, X, Y, Z, sig);
   cube rho_b = getGaussDistr(coord_b,R, The, Phi, X, Y, Z, sig);
+  cube rhoAll = getGaussDistr(coord,R, The, Phi, X, Y, Z, sig);
 
 
 //  vec lastAtom = coord.row(coord.n_rows - 1).t();
 
+coord.print("coord");
 
   //  cout << "Part 1: Done" << endl;
   //----------------------------------------------------------------------------------------------------------------
@@ -159,87 +161,109 @@ int main(int argc, char** argv) {
 
   cube intMea = rho_a%GLC;
   cube intMeb = rho_b%GLC;
-  cube C = zeros<cube>(2,4,100);
+  cube intAll = rhoAll%GLC;
+  cube C = 100*ones<cube>(3,3,100); // (Type, n, all the coeffs)
   int globalI = 0;
 
 
   for(int n=0; n < 3; n++) {
-    Cbuff=rsc*integ3Dvec(intMea,intMeb, getTMat(n,0,0,g,Y0,R,The,Phi));
-    C(0,n,0) = Cbuff(0); C(1,n,0) = Cbuff(1);
+    Cbuff=rsc*integ3Dvec(intMea,intMeb,intAll, getTMat(n,0,0,g,Y0,R,The,Phi));
+    for(int i=0; i < 3; i++){
+       C(i,n,0) = Cbuff(i);
+    }
   }
 
   
   for(int m=-1; m <= 1; m++) {
     globalI++;
     for(int n=0; n < 3; n++) {
-      Cbuff=rsc*integ3Dvec(intMea,intMeb, getT(n,1,m,g,Y1,R,The,Phi));
-      C(0,n,globalI) = Cbuff(0); C(1,n,globalI) = Cbuff(1);
+      Cbuff=rsc*integ3Dvec(intMea,intMeb,intAll, getT(n,1,m,g,Y1,R,The,Phi));
+      for(int i=0; i<3;i++){
+      C(i,n,globalI) = Cbuff(i);
+      }
     }
   }
 
   for(int m=-2; m <= 2; m++) {
     globalI++;
     for(int n=0; n < 3; n++) {
-      Cbuff=rsc*integ3Dvec(intMea,intMeb, getT(n,2,m,g,Y2,R,The,Phi));
-      C(0,n,globalI) = Cbuff(0); C(1,n,globalI) = Cbuff(1);
+      Cbuff=rsc*integ3Dvec(intMea,intMeb,intAll, getT(n,2,m,g,Y2,R,The,Phi));
+      for(int i=0; i<3;i++){
+      C(i,n,globalI) = Cbuff(i);
+      }
     }
   }
 
   for(int m=-3; m <= 3; m++) {
     globalI++;
     for(int n=0; n < 3; n++) {
-      Cbuff=rsc*integ3Dvec(intMea,intMeb, getT(n,3,m,g,Y3,R,The,Phi));
-      C(0,n,globalI) = Cbuff(0); C(1,n,globalI) = Cbuff(1);
+      Cbuff=rsc*integ3Dvec(intMea,intMeb,intAll, getT(n,3,m,g,Y3,R,The,Phi));
+      for(int i=0; i<3;i++){
+      C(i,n,globalI) = Cbuff(i);
+      }
     }
   }
 
   for(int m=-4; m <= 4; m++) {
     globalI++;
     for(int n=0; n < 3; n++) {
-      Cbuff=rsc*integ3Dvec(intMea,intMeb, getT(n,4,m,g,Y4,R,The,Phi));
-      C(0,n,globalI) = Cbuff(0); C(1,n,globalI) = Cbuff(1);
+      Cbuff=rsc*integ3Dvec(intMea,intMeb,intAll, getT(n,4,m,g,Y4,R,The,Phi));
+      for(int i=0; i<3;i++){
+      C(i,n,globalI) = Cbuff(i);
+      }
     }
   }
 
   for(int m=-5; m <= 5; m++) {
     globalI++;
     for(int n=0; n < 3; n++) {
-      Cbuff=rsc*integ3Dvec(intMea,intMeb, getT(n,5,m,g,Y5,R,The,Phi));
-      C(0,n,globalI) = Cbuff(0); C(1,n,globalI) = Cbuff(1);
+      Cbuff=rsc*integ3Dvec(intMea,intMeb,intAll, getT(n,5,m,g,Y5,R,The,Phi));
+      for(int i=0; i<3;i++){
+      C(i,n,globalI) = Cbuff(i);
+      }
     }
   }
 
   for(int m=-6; m <= 6; m++) {
     globalI++;
     for(int n=0; n < 3; n++) {
-      Cbuff=rsc*integ3Dvec(intMea,intMeb, getT(n,6,m,g,Y6,R,The,Phi));
-      C(0,n,globalI) = Cbuff(0); C(1,n,globalI) = Cbuff(1);
+      Cbuff=rsc*integ3Dvec(intMea,intMeb,intAll, getT(n,6,m,g,Y6,R,The,Phi));
+      for(int i=0; i<3;i++){
+      C(i,n,globalI) = Cbuff(i);
+      }
     }
   }
 
   for(int m=-7; m <= 7; m++) {
     globalI++;
     for(int n=0; n < 3; n++) {
-      Cbuff=rsc*integ3Dvec(intMea,intMeb, getT(n,7,m,g,Y7,R,The,Phi));
-      C(0,n,globalI) = Cbuff(0); C(1,n,globalI) = Cbuff(1);
+      Cbuff=rsc*integ3Dvec(intMea,intMeb,intAll, getT(n,7,m,g,Y7,R,The,Phi));
+      for(int i=0; i<3;i++){
+      C(i,n,globalI) = Cbuff(i);
+      }
     }
   }
 
   for(int m=-8; m <= 8; m++) {
     globalI++;
     for(int n=0; n < 3; n++) {
-      Cbuff=rsc*integ3Dvec(intMea,intMeb, getT(n,8,m,g,Y8,R,The,Phi));
-      C(0,n,globalI) = Cbuff(0); C(1,n,globalI) = Cbuff(1);
+      Cbuff=rsc*integ3Dvec(intMea,intMeb,intAll, getT(n,8,m,g,Y8,R,The,Phi));
+      for(int i=0; i<3;i++){
+      C(i,n,globalI) = Cbuff(i);
+      }
     }
   }
 
   for(int m=-9; m <= 9; m++) {
     globalI++;
     for(int n=0; n < 3; n++) {
-      Cbuff=rsc*integ3Dvec(intMea,intMeb, getT(n,9,m,g,Y9,R,The,Phi));
-      C(0,n,globalI) = Cbuff(0); C(1,n,globalI) = Cbuff(1);
+      Cbuff=rsc*integ3Dvec(intMea,intMeb,intAll, getT(n,9,m,g,Y9,R,The,Phi));
+      for(int i=0; i<3;i++){
+      C(i,n,globalI) = Cbuff(i);
+      }
     }
   }
+
 
 //  cout << "Part 3: Done" << endl;
   //----------------------------------------------------------------------------------------------------------------
@@ -248,11 +272,11 @@ int main(int argc, char** argv) {
   
  int incrementN = 0; 
 
-  double P[2][3][3][10]; // Power Spectrum P[A-type][n1][n2][l]
+  double P[3][3][3][10]; // Power Spectrum P[A-type][n1][n2][l]
   memset(P, 0.0, sizeof P);
 
-  for(int a=0; a < 2; a++){ 
-    for(int n1=0; n1 < 3; n1++){ 
+  for(int a=0; a < 3; a++){ // Types + All
+    for(int n1=0; n1 < 3; n1++){  
       for(int n2=0; n2 < 3; n2++){ 
 
           incrementN = 0;
@@ -262,7 +286,8 @@ int main(int argc, char** argv) {
             P[a][n1][n2][l] += C(a,n1,incrementN)*C(a,n2,incrementN);
             incrementN++;
           }
-            cout << P[a][n1][n2][l] << endl;
+            cout << a  << " " <<n1 << " "  << n2 << " " << l << " " << P[a][n1][n2][l] << endl;
+//            cout << P[a][n1][n2][l] << endl;
         }
       }
     }

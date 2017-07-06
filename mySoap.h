@@ -116,19 +116,23 @@ return z;
 }
 //----------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------
-vec integ3Dvec(cube intMea,cube intMeb,cube Tnlm){
+vec integ3Dvec(cube intMea,cube intMeb, cube intAll ,cube Tnlm){
 
   // DANGER!!! NOT RESCALED -> MUST BE RESCALED BY 0.5*0.5*0.5*pi*pi*rcut*integ3D() in main.
   // This is to increase the computation time.
-  vec z(2);
+  vec z(3);
 
   mat x1 = sum(intMea%Tnlm);
   mat x2 = sum(intMeb%Tnlm);
+  mat x3 = sum(intAll%Tnlm);
+
   rowvec y1 = sum(x1);
   rowvec y2 = sum(x2);
+  rowvec y3 = sum(x3);
 
   z(0) = sum(y1);
   z(1) = sum(y2);
+  z(2) = sum(y3);
 
 return z;
 }
