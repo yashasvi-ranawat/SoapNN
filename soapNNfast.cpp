@@ -32,10 +32,10 @@ int main(int argc, char** argv) {
   //----------------------------------------------------------------------------------------------------------------
   
   // Flexible variables:
-  double ao = 0.1; // [0.1 - 5.0]
-  double rcut = 100.0; // [7.0 - 100.0] -> make sure to use fine grid with large cut
-  int radialN = 4; // [1-4]
-  int lMax = 9; // [1-9]
+  double ao = atof(argv[4]); // [0.1 - 5.0]
+  double rcut = atof(argv[5]); // [7.0 - 100.0] -> make sure to use fine grid with large cut
+  int radialN = atoi(argv[6]); // [1-4]
+  int lMax = atoi(argv[7]) ; // [1-9]
 
   // Non-Flexible variables:
   double pi = 3.14159265358979324;
@@ -59,7 +59,6 @@ int main(int argc, char** argv) {
   cube Z;
   cube GLC(GL.n_rows,GL.n_rows,GL.n_rows); // GL weights in 3D which is just an outer product of GL;
   
-
   GL.load("parameters100.txt");GLC.load("GLC100.bi");//
 //  GL.load("parameters50.txt");  GLC.load("GLC50.bi");//
 //  GL.load("parameters70.txt");GLC.load("GLC70.bi"); //
@@ -116,12 +115,6 @@ int main(int argc, char** argv) {
   cube rho_b = getGaussDistr(coord_b,R, The, Phi, X, Y, Z, sig);
   cube rhoAll = getGaussDistr(coord,R, The, Phi, X, Y, Z, sig);
 
-
-//  vec lastAtom = coord.row(coord.n_rows - 1).t();
-
-//coord.print("coord");
-
-  //  cout << "Part 1: Done" << endl;
   //----------------------------------------------------------------------------------------------------------------
   // Part 2) Constructing Basis Functions -> g_n(r),  and Yn(Theta, Phi) 
   //----------------------------------------------------------------------------------------------------------------
@@ -156,7 +149,6 @@ int main(int argc, char** argv) {
   cube Y7 = getY(7,The, Phi);
   cube Y8 = getY(8,The, Phi);
   cube Y9 = getY(9,The, Phi);
-
 
   vec Cbuff(3); // for type a and type b
 
@@ -200,8 +192,6 @@ for(int l = 1; l <= lMax; l++){
   }
 }
 
-
-//  cout << "Part 3: Done" << endl;
   //----------------------------------------------------------------------------------------------------------------
   // Part 4) get Power Spectrum
   //----------------------------------------------------------------------------------------------------------------
@@ -228,11 +218,6 @@ for(int l = 1; l <= lMax; l++){
       }
     }
   }
-
-//  cout << "Part 4: Done" << endl;
-
-  
-
 
 return 0;
 }
