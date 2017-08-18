@@ -126,10 +126,10 @@ int main(int argc, char** argv) {
   gn.col(3)= hydrogenRDF(4, z,ao,norm,R); // a0 = 0.5, Norm. Const. = 2^(3/2)
 
 // Printing out gn for debugging.
-  gn.save("gn.dat",raw_ascii);
-  R.save("R.dat",raw_ascii);
-  The.save("The.dat",raw_ascii);
-  Phi.save("Phi.dat",raw_ascii);
+//  gn.save("gn.dat",raw_ascii);
+//  R.save("R.dat",raw_ascii);
+//  The.save("The.dat",raw_ascii);
+//  Phi.save("Phi.dat",raw_ascii);
 // Transpose for gn
   mat    g = gn.t();
 
@@ -200,7 +200,8 @@ for(int l = 1; l <= lMax; l++){
 
   double P[typesN][radialN][radialN][lMax]; // Power Spectrum P[A-type][n1][n2][l]
   memset(P, 0.0, sizeof P);
-
+  ofstream file1;
+  file1.open(argv[8]);
   for(int a=0; a < typesN; a++){ // Types + All
     for(int n1=0; n1 < radialN; n1++){  
       for(int n2=0; n2 < radialN; n2++){ 
@@ -213,12 +214,12 @@ for(int l = 1; l <= lMax; l++){
             incrementN++;
           }
 //            cout << a  << " " <<n1 << " "  << n2 << " " << l << " " << P[a][n1][n2][l] << endl;
-            cout << P[a][n1][n2][l] << endl;
+            file1<< P[a][n1][n2][l] << endl;
         }
       }
     }
   }
-
+file1.close();
 return 0;
 }
 
